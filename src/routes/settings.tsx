@@ -34,7 +34,7 @@ function SettingsPage() {
             ))}
           </div>
           <p className="mt-5 text-center font-display text-4xl font-semibold text-primary">{s.goalValue}<span className="ml-1 text-base text-muted-foreground">{s.goalType}/day</span></p>
-          <Slider className="mt-4" min={5} max={s.goalType === "pages" ? 100 : 120} step={5} value={[s.goalValue]} onValueChange={([v]) => updateSettings({ goalValue: v })} />
+          <Slider className="mt-4" min={5} max={s.goalType === "pages" ? 100 : 120} step={5} value={[s.goalValue]} onValueChange={(v) => updateSettings({ goalValue: v[0] ?? s.goalValue })} />
         </Card>
         <Card>
           <div className="flex items-center justify-between">
