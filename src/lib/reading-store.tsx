@@ -15,7 +15,7 @@ export type Book = {
   notes?: string;
   minutesSpent?: number;
 };
-export type WishItem = { id: string; title: string; author?: string };
+export type WishItem = { id: string; title: string; author?: string | undefined };
 export type Settings = {
   goalType: "pages" | "minutes";
   goalValue: number;
