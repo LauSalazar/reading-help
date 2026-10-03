@@ -57,12 +57,12 @@ function Analytics() {
         <Card>
           <h2 className="text-lg font-semibold">Pages per day</h2>
           <p className="mb-3 text-xs text-muted-foreground">Last 14 days</p>
-          <div className="h-40"><ResponsiveContainer><BarChart data={daily}><XAxis dataKey="day" tickLine={false} axisLine={false} fontSize={11} /><Tooltip {...tip} cursor={{ fill: "var(--muted)" }} /><Bar dataKey="pages" fill="var(--chart-1)" radius={[6, 6, 0, 0]} /></BarChart></ResponsiveContainer></div>
+          <div className="h-40"><ResponsiveContainer width="100%" height="100%"><BarChart data={daily}><XAxis dataKey="day" tickLine={false} axisLine={false} fontSize={11} /><Tooltip {...tip} cursor={{ fill: "var(--muted)" }} /><Bar dataKey="pages" fill="var(--chart-1)" radius={[6, 6, 0, 0]} /></BarChart></ResponsiveContainer></div>
         </Card>
         <Card>
           <h2 className="text-lg font-semibold">Weekly consistency</h2>
           <p className="mb-3 text-xs text-muted-foreground">Pages per week · last 8 weeks</p>
-          <div className="h-40"><ResponsiveContainer><LineChart data={weekly}><XAxis dataKey="week" tickLine={false} axisLine={false} fontSize={11} /><Tooltip {...tip} /><Line type="monotone" dataKey="pages" stroke="var(--chart-2)" strokeWidth={3} dot={{ r: 3 }} /></LineChart></ResponsiveContainer></div>
+          <div className="h-40"><ResponsiveContainer width="100%" height="100%"><LineChart data={weekly}><XAxis dataKey="week" tickLine={false} axisLine={false} fontSize={11} /><Tooltip {...tip} /><Line type="monotone" dataKey="pages" stroke="var(--chart-2)" strokeWidth={3} dot={{ r: 3 }} /></LineChart></ResponsiveContainer></div>
           <div className="mt-3 grid grid-cols-8 gap-1">
             {weekly.map((w) => <div key={w.week} title={`${w.days}/7 days`} className="h-2 rounded-full bg-primary" style={{ opacity: 0.15 + (w.days / 7) * 0.85 }} />)}
           </div>
