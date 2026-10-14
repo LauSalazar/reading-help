@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Star, ThumbsDown, ThumbsUp } from "lucide-react";
 import { AppShell, Card, Cover, PageHeader } from "@/components/AppShell";
+import { useTranslation } from "@/lib/i18n";
 import { POSITIVE_TAGS, useReading } from "@/lib/reading-store";
 
 export const Route = createFileRoute("/history")({
@@ -17,9 +18,11 @@ export const Route = createFileRoute("/history")({
 
 function HistoryPage() {
   const { state } = useReading();
+  const { t } = useTranslation();
+
   return (
     <AppShell>
-      <PageHeader eyebrow={`${state.finished.length} books finished`} title="Your shelf" />
+      <PageHeader eyebrow={t("history.eyebrow", { count: state.finished.length })} title={t("history.title")} />
       <div className="space-y-3">
         {state.finished.map((b) => (
           <Card key={b.id} className="p-4">
@@ -36,7 +39,7 @@ function HistoryPage() {
                 </div>
                 {!!b.tags?.length && (
                   <div className="mt-2 flex flex-wrap gap-1">
-                    {b.tags.map((t) => <span key={t} className={`rounded-full px-2 py-0.5 text-[11px] ${POSITIVE_TAGS.has(t) ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"}`}>{t}</span>)}
+                    {b.tags.map((tag) => <span key={tag} className={`rounded-full px-2 py-0.5 text-[11px] ${POSITIVE_TAGS.has(tag) ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"}`}>{tag}</span>)}
                   </div>
                 )}
                 {b.notes && <p className="mt-2 text-sm italic text-muted-foreground">“{b.notes}”</p>}

@@ -2,18 +2,12 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { BarChart3, BookOpen, History, Settings, Sparkles } from "lucide-react";
 import { useEffect, useRef, type ReactNode } from "react";
 import { toast } from "sonner";
+import { useTranslation } from "@/lib/i18n";
 import { useReading } from "@/lib/reading-store";
-
-const tabs = [
-  { to: "/", label: "Home", icon: BookOpen },
-  { to: "/history", label: "History", icon: History },
-  { to: "/analytics", label: "Analytics", icon: BarChart3 },
-  { to: "/recommendations", label: "For You", icon: Sparkles },
-  { to: "/settings", label: "Settings", icon: Settings },
-] as const;
 
 function Reminder() {
   const { state } = useReading();
+  const { t } = useTranslation();
   const fired = useRef<string>("");
   useEffect(() => {
     const id = setInterval(() => {
@@ -24,16 +18,25 @@ function Reminder() {
       const key = n.toDateString() + hm;
       if (hm === s.reminderTime && fired.current !== key) {
         fired.current = key;
-        toast(s.reminderMessage, { description: "Your daily reading reminder" });
+        toast(s.reminderMessage, { description: t("reminder.description") });
       }
     }, 20000);
     return () => clearInterval(id);
-  }, [state.settings]);
+  }, [state.settings, t]);
   return null;
 }
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
+  const { t } = useTranslation();
+  const tabs = [
+    { to: "/", label: t("nav.home"), icon: BookOpen },
+    { to: "/history", label: t("nav.history"), icon: History },
+    { to: "/analytics", label: t("nav.analytics"), icon: BarChart3 },
+    { to: "/recommendations", label: t("nav.recommendations"), icon: Sparkles },
+    { to: "/settings", label: t("nav.settings"), icon: Settings },
+  ] as const;
+
   return (
     <div className="mx-auto min-h-screen max-w-md bg-background pb-28">
       <Reminder />

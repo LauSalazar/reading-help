@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Plus, Check } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, Card, Cover, PageHeader } from "@/components/AppShell";
+import { useTranslation } from "@/lib/i18n";
 import { useReading, type Book } from "@/lib/reading-store";
 
 export const Route = createFileRoute("/recommendations")({
@@ -48,6 +49,7 @@ function recommend(finished: Book[], exclude: Set<string>) {
 
 function Recs() {
   const { state, addWish } = useReading();
+  const { t } = useTranslation();
   const ex = new Set([...state.finished, ...(state.current ? [state.current] : [])].map((b) => b.title.toLowerCase()));
   const wished = new Set(state.wishlist.map((w) => w.title.toLowerCase()));
   const recs = recommend(state.finished, ex);
@@ -55,9 +57,9 @@ function Recs() {
 
   return (
     <AppShell>
-      <PageHeader eyebrow="Curated from your ratings" title="Recommended for you" />
+      <PageHeader eyebrow={t("recs.eyebrow")} title={t("recs.title")} />
       {disliked.length > 0 && (
-        <p className="mb-4 rounded-xl bg-muted px-4 py-3 text-xs text-muted-foreground">Steering away from books like {disliked.map((b) => `“${b.title}”`).join(", ")}.</p>
+        <p className="mb-4 rounded-xl bg-muted px-4 py-3 text-xs text-muted-foreground">{t("recs.steering", { titles: disliked.map((b) => `“${b.title}”`).join(", ") })}</p>
       )}
       <div className="space-y-3">
         {recs.map((r) => {
@@ -70,16 +72,16 @@ function Recs() {
                   <h2 className="text-lg font-semibold leading-tight">{r.title}</h2>
                   <p className="text-sm text-muted-foreground">{r.author}</p>
                   <p className="mt-1 text-sm">{r.blurb}</p>
-                  <span className="mt-2 inline-block rounded-full bg-accent px-2.5 py-0.5 text-[11px] font-medium text-accent-foreground">Because you enjoyed {r.because!.title}</span>
+                  <span className="mt-2 inline-block rounded-full bg-accent px-2.5 py-0.5 text-[11px] font-medium text-accent-foreground">{t("recs.becauseYouEnjoyed", { title: r.because!.title })}</span>
                 </div>
-                <button disabled={added} aria-label="Add to Next Up" onClick={() => { addWish(r.title, r.author); toast.success("Added to Next Up"); }} className={`press h-9 w-9 shrink-0 self-start rounded-full border flex items-center justify-center ${added ? "bg-primary text-primary-foreground" : "text-primary"}`}>
+                <button disabled={added} aria-label={t("recs.addToNextUp")} onClick={() => { addWish(r.title, r.author); toast.success(t("home.addedToNextUp")); }} className={`press h-9 w-9 shrink-0 self-start rounded-full border flex items-center justify-center ${added ? "bg-primary text-primary-foreground" : "text-primary"}`}>
                   {added ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
                 </button>
               </div>
             </Card>
           );
         })}
-        {recs.length === 0 && <p className="text-sm text-muted-foreground">Rate a few more books to get suggestions.</p>}
+        {recs.length === 0 && <p className="text-sm text-muted-foreground">{t("recs.rateMore")}</p>}
       </div>
     </AppShell>
   );
