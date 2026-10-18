@@ -11,7 +11,7 @@ export const getRouter = () => {
     context: { queryClient },
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
-    history: import.meta.env.BASE_URL !== "/" ? createHashHistory() : undefined,
+    history: typeof window !== "undefined" ? createHashHistory() : undefined,
   });
 
   return router;
