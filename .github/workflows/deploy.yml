@@ -24,11 +24,39 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm run build
-      - run: cp dist/index.html dist/404.html
+
+      - name: Build
+        run: npm run build
+        env:
+          GITHUB_PAGES: "true"
+
+      - name: Preparar salida
+        run: |
+          echo "--- HTML generados ---"
+          find dist .output -name "*.html" 2>/dev/null || true
+
+          OUT=""
+          for d in dist/client .output/public dist; do
+            if [ -d "$d" ]; then OUT="$d"; break; fi
+          done
+          if [ -z "$OUT" ]; then echo "No se encontró carpeta de salida"; exit 1; fi
+
+          if [ ! -f "$OUT/index.html" ]; then
+            SHELL_FILE=$(find "$OUT" -maxdepth 1 -name "_shell.html" | head -1)
+            if [ -z "$SHELL_FILE" ]; then
+              SHELL_FILE=$(find "$OUT" -maxdepth 1 -name "*.html" | head -1)
+            fi
+            if [ -z "$SHELL_FILE" ]; then echo "No hay HTML en $OUT"; exit 1; fi
+            cp "$SHELL_FILE" "$OUT/index.html"
+          fi
+
+          cp "$OUT/index.html" "$OUT/404.html"
+          touch "$OUT/.nojekyll"
+          echo "OUT_DIR=$OUT" >> "$GITHUB_ENV"
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: ${{ env.OUT_DIR }}
 
   deploy:
     needs: build

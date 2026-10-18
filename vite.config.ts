@@ -13,6 +13,7 @@ const base = isGithubPages ? `/${repoName}/` : "/";
 export default defineConfig({
   base,
   tanstackStart: {
+    spa: { enabled: true },
     router: {
       basepath: isGithubPages ? `/${repoName}` : undefined,
     },
